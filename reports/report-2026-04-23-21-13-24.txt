@@ -1,0 +1,23 @@
+======================================
+      SERVER GUARD SYSTEM REPORT      
+======================================
+
+Service      : Server Guard CLI Monitor
+Author       : Ibrahim Bagalwa
+Generated At : 2026-04-23 21:13:24
+
+--------------------------------------
+SYSTEM METRICS
+--------------------------------------
+CPU Usage    : 15.21%
+Memory Usage : 97.74085270509746690200%
+Disk Usage   : 4%
+
+--------------------------------------
+THRESHOLDS
+--------------------------------------
+CPU Threshold : 80%
+Mem Threshold : 75%
+Disk Threshold: 90%
+
+======================================
