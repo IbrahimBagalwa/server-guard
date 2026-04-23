@@ -23,3 +23,5 @@
 [2026-04-23 19:06:36] [INFO] Disk Usage: 4%
 [2026-04-23 19:06:36] [WARNING] High Memory usage detected: 98.21952559651153275100%
 [2026-04-23 19:07:56] [INFO] Recovery started
+[2026-04-23 19:10:43] [INFO] Manual recovery started
+[2026-04-23 19:10:45] [INFO] CPU usage is normal in manual fix mode: 15.56%

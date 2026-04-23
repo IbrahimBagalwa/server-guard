@@ -35,7 +35,14 @@ case $COMMAND in
 		fi
 	;;
     fix)
-		log "INFO" "Recovery started"
+		log "INFO" "Manual recovery started"
+		CPU_USAGE=$(get_cpu_usage)
+		if (( $(echo "$CPU_USAGE > $CPU_THRESHOLD" | bc -l) )); then
+			log "WARNING" "CPU still high in manual fix mode: $CPU_USAGE%"
+			kill_heavy_process
+		else
+			log "INFO" "CPU usage is normal in manual fix mode: $CPU_USAGE%"
+		fi
 	;;
     report)
 		log "INFO" "Report requested"
