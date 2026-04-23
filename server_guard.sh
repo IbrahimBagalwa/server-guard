@@ -14,6 +14,8 @@ source lib/validation.sh
 
 WHITELIST=$(cat config.whitelist)
 
+COMMAND="$1"
+FLAG="$2"
 NUM_ARGS=$#
 
 if [[ "$1" == "--help" || "$1" == "-h" || "$1" == "help" ]]; then
@@ -21,7 +23,7 @@ if [[ "$1" == "--help" || "$1" == "-h" || "$1" == "help" ]]; then
 	exit 0
 fi
 
-if [ "$NUM_ARGS" -gt 1 ]; then
+if [ "$NUM_ARGS" -gt 2 ]; then
 	input_validation "Too many arguments provided"
 fi
 
@@ -29,10 +31,37 @@ if [ "$NUM_ARGS" -eq 0 ]; then
 	input_validation "No command provided"
 fi
 
-COMMAND=$1
+VERBOSE=false
+DEBUG=false
+
+if [ "$NUM_ARGS" -eq 2 ]; then
+	case "$FLAG" in
+		--verbose|-v)
+			VERBOSE=true
+			;;
+		--debug)
+			DEBUG=true
+			;;
+		*)
+			input_validation "Invalid flag: $FLAG"
+			;;
+	esac
+fi
+
+if [ "$DEBUG" == true ]; then
+	set -x
+fi
+
+vlog(){
+	if [ "$VERBOSE" == true ]; then
+		log "INFO" "$1"
+	fi
+}
 
 case $COMMAND in
     monitor)
+		vlog "Fetching system metrics..."
+
 		CPU_USAGE=$(get_cpu_usage)
 		MEM_USAGE=$(get_memory_usage)
 		DISK_USAGE=$(get_disk_usage)
@@ -41,8 +70,11 @@ case $COMMAND in
         log "INFO" "Memory Usage: $MEM_USAGE%"
         log "INFO" "Disk Usage: $DISK_USAGE%"
 		
+		vlog "Checking thresholds..."
+
 		if (( $(echo "$CPU_USAGE > $CPU_THRESHOLD" | bc -l) )); then
 			log "WARNING" "High CPU usage detected: $CPU_USAGE%"
+			vlog "Triggering recovery..."
 			kill_heavy_process
 		fi
 
@@ -57,19 +89,24 @@ case $COMMAND in
     fix)
 		log "INFO" "Manual recovery started"
 		CPU_USAGE=$(get_cpu_usage)
+
 		if (( $(echo "$CPU_USAGE > $CPU_THRESHOLD" | bc -l) )); then
 			log "WARNING" "CPU still high in manual fix mode: $CPU_USAGE%"
+			vlog "Triggering recovery from fix command..."
 			kill_heavy_process
 		else
 			log "INFO" "CPU usage is normal in manual fix mode: $CPU_USAGE%"
 		fi
 	;;
     report)
+		vlog "Generating system report..."
 		TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
 		FILE_DATE=$(date '+%Y-%m-%d-%H-%M-%S')
-		report_dir="reports"
-		mkdir -p "$report_dir"
-		REPORT_FILE="$report_dir/report-$FILE_DATE.txt"
+
+		REPORT_DIR="reports"
+		mkdir -p "$REPORT_DIR"
+
+		REPORT_FILE="$REPORT_DIR/report-$FILE_DATE.txt"
 
 		CPU_USAGE=$(get_cpu_usage)
 		MEM_USAGE=$(get_memory_usage)
