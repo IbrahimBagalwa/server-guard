@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-
+source config.conf
 source lib/monitor.sh
 source lib/logger.sh
 
@@ -14,6 +14,18 @@ case $COMMAND in
         log "INFO" "CPU Usage: $CPU_USAGE%"
         log "INFO" "Memory Usage: $MEM_USAGE%"
         log "INFO" "Disk Usage: $DISK_USAGE%"
+		
+		if (( $(echo "$CPU_USAGE > $CPU_THRESHOLD" | bc -l) )); then
+			log "WARNING" "High CPU usage detected: $CPU_USAGE%"
+		fi
+
+		if (( $(echo "$MEM_USAGE > $MEM_THRESHOLD" | bc -l) )); then
+			log "WARNING" "High Memory usage detected: $MEM_USAGE%"
+		fi
+
+		if (( $(echo "$DISK_USAGE > $DISK_THRESHOLD" | bc -l) )); then
+			log "WARNING" "High Disk usage detected: $DISK_USAGE%"
+		fi
 	;;
     fix)
 		log "INFO" "Recovery started"
