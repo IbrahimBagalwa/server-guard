@@ -25,3 +25,10 @@
 [2026-04-23 19:07:56] [INFO] Recovery started
 [2026-04-23 19:10:43] [INFO] Manual recovery started
 [2026-04-23 19:10:45] [INFO] CPU usage is normal in manual fix mode: 15.56%
+[2026-04-23 19:23:53] [INFO] Manual recovery started
+[2026-04-23 19:23:54] [INFO] CPU usage is normal in manual fix mode: 15.56%
+[2026-04-23 19:28:18] [INFO] Report requested: reports/report-2026-04-23-19-28-17.txt
+[2026-04-23 19:29:39] [INFO] CPU Usage: 16.70%
+[2026-04-23 19:29:39] [INFO] Memory Usage: 97.88523492073618066400%
+[2026-04-23 19:29:39] [INFO] Disk Usage: 4%
+[2026-04-23 19:29:39] [WARNING] High Memory usage detected: 97.88523492073618066400%
