@@ -1,10 +1,16 @@
 #!/bin/bash
+
 set -e
+
 source config.conf
-source lib/monitor.sh
 source lib/logger.sh
+source lib/monitor.sh
+source lib/recovery.sh
 
 COMMAND=$1
+
+WHITELIST=$(cat config.whitelist)
+
 case $COMMAND in
     monitor)
 		CPU_USAGE=$(get_cpu_usage)
@@ -17,6 +23,7 @@ case $COMMAND in
 		
 		if (( $(echo "$CPU_USAGE > $CPU_THRESHOLD" | bc -l) )); then
 			log "WARNING" "High CPU usage detected: $CPU_USAGE%"
+			kill_heavy_process
 		fi
 
 		if (( $(echo "$MEM_USAGE > $MEM_THRESHOLD" | bc -l) )); then
